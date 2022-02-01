@@ -39,3 +39,4 @@ En primera instancia se realiza el diseño del diagrama Entidad-Relación, denom
 </p>
 
 - [x] Ingresar a la carpeta **“0_Esquema_OLTP_y_OLAP”**, para ver los diagramas completos que se encuentran en formato ***.DM1**.
+
