@@ -40,3 +40,38 @@ En primera instancia se realiza el diseño del diagrama Entidad-Relación, denom
 
 - [x] Ingresar a la carpeta **“0_Esquema_OLTP_y_OLAP”**, para ver los diagramas completos que se encuentran en formato ***.DM1**.
 
+
+## Creación de la Base de Datos: DISTRIBUIDOR
+En esta fase se crea una base de datos relacional, con el nombre de _DISTRIBUIDOR_; implementando en el gestor de base de datos **Oracle** mediante Scripts (_código SQL, tablas_), que dichos Scripts se obtuvieron del **modelo OLTP** con la ayuda de la herramienta **Embarcadero ER/Studio**.
+
+Como ejemplo de código SQL para la creación de las tablas, se tiene a continuación:
+
+```sql
+--
+-- TABLE: CIUDADES
+--
+CREATE TABLE CIUDADES(
+    ID_CIUDAD     NUMBER(38, 0)    NOT NULL,
+    NOM_CIUDAD    VARCHAR2(100),
+    ID_DEPTO      NUMBER(38, 0),
+    CONSTRAINT CIUDADES_PK PRIMARY KEY (ID_CIUDAD)
+)
+;
+```
+
+Además, se tiene código SQL para la carga de los datos (_inserts_), como ser:
+
+```sql
+--
+-- TABLE: CIUDADES
+--
+Insert into CIUDADES (ID_CIUDAD, NOM_CIUDAD, ID_DEPTO) Values (1, 'ARTIGAS', 2);
+Insert into CIUDADES (ID_CIUDAD, NOM_CIUDAD, ID_DEPTO) Values (2, 'BELLA UNION', 2);
+Insert into CIUDADES (ID_CIUDAD, NOM_CIUDAD, ID_DEPTO) Values (3, 'CANELONES', 3);
+```
+
+- [x] Ingresar a la carpeta **“1_Fuente_Distribuidor”**, para ver los Scripts completos del _modelo OLTP_.
+
+
+
+
