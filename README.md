@@ -190,5 +190,44 @@ SELECT * FROM STAR.DIM_PRODUCTOS;
 
 
 ## Proceso ETL con Pentaho DI (_Spoon_)
+La herramienta de Pentaho DI tiene un componente denominado **Spoon** que nos facilita en la construcción de un proceso ETL, mediante una interfaz gráfica e intuitiva.
+
+Para lo cual realizaremos el mismo proceso ETL, con una diferencia de manejar dos gestores de bases de datos: **Oracle** para la extracción de datos y **PostgreSQL** para la carga de los datos, y por ende Pentaho DI (_Spoon_) se encargará de la transformación de los datos y la conexión a Oracle y PostgreSQL.
+
+Ya que anteriormente se creó una base de datos en Oracle con el nombre de DISTRIBUIDOR (es decir, se cuenta con esta base de datos), ahora se creará dos bases de datos en PostgreSQL con los nombres de **STAGE2** y **STAR2**.
+
+
+### 1. Extracción
+Comenzaremos con la extracción de los datos: de DISTRIBUIDOR hacia STAGE2, con la **transformación: ETL_STG_PRODUCTOS**, que dicho proceso es denominado _transformación_ en la herramienta Spoon.
+
+A continuación, se observa el diagrama creado con la herramienta Spoon de Pentaho DI.
+
+<p align="center">
+  <img src="./images/extraccion.png" height="120" />
+</p>
+
+- [x] Ingresar a la carpeta **“3_Proceso_ETL_con_Pentaho_DI/1_Stage_1”**, para ver las _Transformaciones_ completas ya creadas.
+
+
+### 2. Transformación
+Se continua con la transformación de los datos en la base de datos STAGE2, con la **transformación: ETL_STG_DIM_PRODUCTOS**, es decir:
+
+<p align="center">
+  <img src="./images/transformacion.png" height="250" />
+</p>
+
+- [x] Ingresar a la carpeta **“3_Proceso_ETL_con_Pentaho_DI/2_Stage_2”**, para ver las _Transformaciones_ completas ya creadas.
+
+
+### 3. Carga
+Y finalmente se realiza la carga de los datos en la base de datos STAGE2, con la transformación: **ETL_DIM_PRODUCTOS**, es decir, en esta transformación realiza tanto la inserción como la actualización de los datos.
+
+<p align="center">
+  <img src="./images/carga.png" height="190" />
+</p>
+
+- [x] Ingresar a la carpeta **“3_Proceso_ETL_con_Pentaho_DI/3_Star”**, donde se tienen las Transformaciones completas ya creadas.
+
+
 
 
