@@ -73,5 +73,122 @@ Insert into CIUDADES (ID_CIUDAD, NOM_CIUDAD, ID_DEPTO) Values (3, 'CANELONES', 3
 - [x] Ingresar a la carpeta **“1_Fuente_Distribuidor”**, para ver los Scripts completos del _modelo OLTP_.
 
 
+## Proceso ETL con Scripts SQL
+En esta fase se realiza el proceso ETL con la ayuda de Scripts en **código SQL**. Para tal efecto se debe crear 3 bases de datos en **Oracle** con los nombres:
+
+* **DISTRIBUIDOR**. Esta base de datos se utilizará como fuente de **_extracción_** de datos.
+* **STAGE**. En esta base de datos se realiza la **_transformación_** de los datos con procedimientos almacenados.
+* **STAR**. En esta base de datos se efectuará la **_carga_** de los datos.
+
+- [x] **Nota:** Al crear estas bases de datos se encuentran vacías, excepto el de DISTRIBUIDOR, porque ya se creó con anterioridad.
+
+Para el desarrollo de la fase, se considera tomar el orden de las siguientes sub etapas:
+
+
+### 1. Distribuidor
+Comenzamos con otorgar privilegios SQL de **SELECT**, a la base de datos STAGE desde la base de datos DISTRIBUIDOR. Para tal efecto, se tiene como ejemplo el siguiente código para ejecutar en la base de datos **DISTRIBUIDOR**.
+
+```tsql
+GRANT SELECT ON CIUDADES TO STAGE;
+```
+
+- [x] Ingresar a la carpeta **“2_Proceso_ETL_con_Script/1_Distribuidor”**, para ver el Script completo de los permisos (_privilegios_).
+
+
+### 2. Star
+Se realiza la creación de la base de datos STAR mediante Scripts (_código SQL_), a través del modelo dimensional distribuidor **OLAP**, que se obtienen con la ayuda de la herramienta **Embarcadero ER/Studio**.
+
+Un pequeño ejemplo de código SQL:
+
+```sql
+-- 
+-- TABLE: dim_productos 
+--
+CREATE TABLE dim_productos(
+    idw_productos       NUMBER(10, 0)    NOT NULL,
+    id_presentacion     NUMBER(10, 0)    NOT NULL,
+    presentacion        VARCHAR2(100),
+    tamanio             VARCHAR2(100),
+    id_producto         NUMBER(10, 0)    NOT NULL,
+    producto            VARCHAR2(100),
+    familia             VARCHAR2(100),
+    duracion            VARCHAR2(100),
+    id_canal_sistema    NUMBER(10, 0),
+    start_date          DATE,
+    end_date            DATE,
+    flag                NUMBER(1, 0),
+    user_dwh            VARCHAR2(100),
+    CONSTRAINT PK_DIM_PRODUCTOS PRIMARY KEY (idw_productos)
+)
+;
+```
+
+Luego otorgamos privilegios SQL de **SELECT, INSERT, UPDATE** y **DELETE** a la base de datos STAGE desde la base de datos STAR, es decir:
+
+```tsql
+GRANT SELECT, INSERT, UPDATE, DELETE ON DIM_PRODUCTOS TO STAGE;
+```
+
+- [x] Ingresar a la carpeta **“2_Proceso_ETL_con_Script/2_Star”**, para ver los Scripts completos.
+
+
+### 3. Stage
+En esta etapa se realiza la transformación y carga de los datos con procedimientos almacenados mediante Scripts SQL, ejecutando estos Scripts en la base de datos **STAGE**.
+
+  _**a. Estructura de la base de datos STAGE**_
+
+Se realiza la creación de **estructuras** de tablas, **secuencias** para las tablas dimensionales y **tabla de procesos** para observar las ejecuciones de los procedimientos en la base de datos STAGE.
+
+```sql
+CREATE TABLE STG_PRODUCTOS
+NOLOGGING
+AS
+SELECT * FROM distribuidor.productos
+where rownum<1 ;
+```
+
+_**b. Extracción de los datos**_
+
+Se realiza la extracción de los de datos: de DISTRIBUIDOR hacia STAGE, mediante el siguiente procedimiento:
+
+```tsql
+CREATE OR REPLACE PROCEDURE ETL_STG_PRODUCTOS IS
+```
+
+_**c. Transformación de los datos**_
+
+Se realiza la transformación o creación de tablas Dimensionales y Hechos, es decir: del modelo OLTP hacia el modelo OLAP, mediante el siguiente procedimiento:
+
+```tsql
+CREATE OR REPLACE PROCEDURE ETL_STG_DIM_PRODUCTOS
+```
+
+_**d. Carga de los datos**_
+
+Luego se efectúa la carga de nuevos datos o actualización de los datos de STAGE hacia STAR, mediante el siguiente procedimiento:
+
+```tsql
+CREATE OR REPLACE PROCEDURE ETL_DIM_PRODUCTOS
+```
+
+_**e. Ejecución de los procedimientos**_
+
+Y finalmente se realiza la ejecución del proceso ETL, ejecutando los procedimientos creados anteriormente (_tomar en cuenta el orden de los procedimientos_), es decir:
+
+```tsql
+-- DIM PRODUCTO
+
+exec ETL_STG_PRODUCTOS;
+exec ETL_STG_PRESENTACIONES;
+exec ETL_STG_DIM_PRODUCTOS;
+exec ETL_DIM_PRODUCTOS;
+
+SELECT * FROM STAR.DIM_PRODUCTOS;
+```
+
+- [x] Ingresar a la carpeta **“2_Proceso_ETL_con_Script/3_Stage”**, para ver los Scripts completos.
+
+
+## Proceso ETL con Pentaho DI (_Spoon_)
 
 
